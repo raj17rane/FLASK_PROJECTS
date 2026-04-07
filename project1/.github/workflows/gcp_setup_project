@@ -1,0 +1,32 @@
+gcloud iam service-accounts create github-actions-sa \
+  --display-name="GitHub Actions SA" \
+  --project=itreach-dev-3
+
+# Artifact Registry Writer
+gcloud projects add-iam-policy-binding itreach-dev-3 \
+  --member="serviceAccount:github-actions-sa@itreach-dev-3.iam.gserviceaccount.com" \
+  --role="roles/artifactregistry.writer"
+
+# App Engine Deployer
+gcloud projects add-iam-policy-binding itreach-dev-3 \
+  --member="serviceAccount:github-actions-sa@itreach-dev-3.iam.gserviceaccount.com" \
+  --role="roles/appengine.deployer"
+
+# App Engine Service Account Actor
+gcloud projects add-iam-policy-binding itreach-dev-3 \
+  --member="serviceAccount:github-actions-sa@itreach-dev-3.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser"
+
+# Storage Admin (App Engine needs this)
+gcloud projects add-iam-policy-binding itreach-dev-3 \
+  --member="serviceAccount:github-actions-sa@itreach-dev-3.iam.gserviceaccount.com" \
+  --role="roles/storage.admin"
+
+gcloud iam service-accounts keys create key.json \
+  --iam-account=github-actions-sa@itreach-dev-3.iam.gserviceaccount.com
+
+# Add secret to github
+Go to your repo → Settings → Secrets and variables → Actions
+Click New repository secret
+Name: GCP_SA_KEY
+Value: paste the entire contents of key.json
