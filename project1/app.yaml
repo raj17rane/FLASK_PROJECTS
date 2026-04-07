@@ -1,2 +1,0 @@
-runtime: custom        # tells App Engine to use your Docker image
-env: flex              # Flexible environment supports Docker
